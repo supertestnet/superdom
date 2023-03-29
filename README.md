@@ -1,4 +1,4 @@
-# Superdom
+# Super DOM
 
 This project demonstrates that vanilla javascript can generate reactive, self-updating html components with global state without the need for react and all its bloat
 
