@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Global state management in vanilla javascript</title>
+    <meta charset="UTF-8">
+    <style>
+      * {
+        box-sizing: border-box;
+        font-size: 1.15rem;
+        font-family: Arial, sans-serif;
+      }
+      html {
+        max-width: 70ch;
+        padding: 3rem 1rem;
+        margin: auto;
+        line-height: 1.25;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    </style>
+    <script>
+      var $ = document.querySelector.bind( document );
+      var $$ = document.querySelectorAll.bind( document );
+    </script>
+  </head>
+
+  <body>
+    <h1>Global state management in vanilla javascript</h1>
+    <p>Modified from this original: <a href="https://dev.to/vijaypushkin/dead-simple-state-management-in-vanilla-javascript-24p0" target="_blank">https://dev.to/vijaypushkin/dead-simple-state-management-in-vanilla-javascript-24p0</a></p>
+    <p>This document demonstrates that vanilla javascript can generate dynamic html components with global state without the need for react and all its bloat.</p>
+    <div class="component"></div>
+    <p>When you did that, you modified a variable within an html component called "component." Its state, at any given time, is globally accessible throughout your html document with standard js syntax: component.count</p>
+    <p>Moreover, when you clicked the button, only the html components that use that variable got rerendered. Other html elements on your page were not affected.</p>
+    <div class="component2"></div>
+    <p>Notice that it got rerendered, but this html element (i.e. the paragraph you're reading right now) does not use that variable, so it did not get rerendered. Voila! Global state management, components, and a reactive DOM, all without react.</p>
+
+    <script>
+      //this object represents an html component that will soon be dumped into the div called component
+      //it also contains the state of that component, which is globally accessible
+      var component = {
+        //the html function returns an html element containing info about your component
+        html: () => {
+          return `
+            <div>
+              Increment the following counter:
+            </div>
+            <h1>${component.count}</h1>
+            <button class="button">Increment</button>
+          `;
+        },
+        count: 0,
+        //the setState function takes a function as an argument, runs that function in order to
+        //update the state object of my component function, then re-renders my component with render()
+        setState: (callback) => {
+          callback();
+          component.render();
+        },
+        increment: () => {
+          //In this case, I pass a function to setState() that increments a counter in my component's state
+          component.setState(() => component.count++);
+        },
+        //render() renders or re-renders my component and, since my component contains a button,
+        //it ensures that that button does what it's supposed to, which, in this case, means
+        //it should run my component's increment function when clicked
+        render: () => {
+          $( ".component" ).innerHTML = component.html();
+          $( ".button" ).addEventListener( "click", component.increment );
+        }
+      };
+
+      var component2 = {
+        html: () => {
+          return `
+            <div>
+              For example, this second component displays the first component's state:
+            </div>
+            <h1>${component.count}</h1>
+          `;
+        },
+        render: () => {
+          $( ".component2" ).innerHTML = component2.html();
+        }
+      };
+
+      //I want another component to display my original component's state, so I modify
+      //the original component's render function to *also* render my second component
+      //I can do this whenever I add a component that displays another component's state
+      //the tempfunc variable prevents me from getting infinite recursion by putting
+      //the original render function directly inside itself
+      var tempfunc = component.render;
+      component.render = () => {
+          tempfunc();
+          component2.render();
+      }
+
+      component.render();
+    </script>
+  </body>
+</html>
