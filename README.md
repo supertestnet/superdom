@@ -1,6 +1,6 @@
 # Superdom
 
-This project demonstrates that vanilla javascript can generate dynamic html components with global state without the need for react and all its bloat
+This project demonstrates that vanilla javascript can generate reactive, self-updating html components with global state without the need for react and all its bloat
 
 # How to try
 
