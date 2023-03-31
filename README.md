@@ -4,7 +4,7 @@ This project demonstrates that vanilla javascript can generate reactive, self-up
 
 # How to try
 
-Click here: https://supertestnet.github.io/super-dom
+Click here: https://supertestnet.github.io/superdom
 
 # How it works
 
